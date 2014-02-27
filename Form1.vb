@@ -15,6 +15,7 @@ Public Class Form1
     End Function
 
     Private Sub UpdateTextBox()
+        Cursor.Current = Cursors.WaitCursor
         Dim buffer As New System.Text.StringBuilder()
         For Each path1 As String In PathList
             If buffer.Length > 0 Then
@@ -84,6 +85,7 @@ Public Class Form1
             Else
                 buffer.Append("(file not found)")
             End If
+            Me.Update()
         Next
         TextBox1.Text = buffer.ToString()
     End Sub
