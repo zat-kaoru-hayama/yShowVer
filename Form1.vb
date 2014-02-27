@@ -3,7 +3,7 @@
 Public Class Form1
     Public PathList As New List(Of String)
 
-    Private stamp As New Dictionary(Of String, String)
+    Private stamp As New Dictionary(Of String, DateTime)
     Private md5cache As New Dictionary(Of String, String)
 
     Private Shared Function VersionFilter(ByVal src As String) As String
@@ -24,43 +24,47 @@ Public Class Form1
             If CheckBoxFullPath.Checked Then
                 buffer.AppendFormat("{0}{1}{2}", System.IO.Path.GetFullPath(path1), vbCrLf, vbTab)
             Else
-                buffer.AppendFormat("{0}{1}", System.IO.Path.GetFileName(path1), vbTab)
+                buffer.AppendFormat("{0,-16}", System.IO.Path.GetFileName(path1))
             End If
 
             If System.IO.File.Exists(path1) Then
-
                 Dim vi As System.Diagnostics.FileVersionInfo =
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
-                Dim fi As New System.IO.FileInfo(path1)
-                fi.Refresh()
 
-                Dim stamp1 As String = Nothing
-                If Not stamp.TryGetValue(path1, stamp1) Then
-                    Using r = System.IO.File.OpenRead(path1)
-                        Dim array As Byte() = New Byte(4) {}
-                        r.Seek(60, IO.SeekOrigin.Begin)
-                        r.Read(array, 0, 4)
-                        Dim dword As Integer = Bytes2Dword(array)
-                        r.Seek(dword + 8, IO.SeekOrigin.Begin)
-                        r.Read(array, 0, 4)
-                        Dim datetime1 As New DateTime(Bytes2Dword(array) * 1000 * 1000 * 10, DateTimeKind.Utc)
-                        datetime1 = datetime1.AddYears(2010 - 41).ToLocalTime()
-                        stamp1 = datetime1.ToString().Replace("/", "-")
+                buffer.AppendFormat("{0,-17}{1,-17}",
+                                    VersionFilter(vi.FileVersion),
+                                    VersionFilter(vi.ProductVersion))
 
-                        stamp(path1) = stamp1
-                    End Using
+                Dim stamp1 As DateTime
+                If Not String.IsNullOrWhiteSpace(vi.FileVersion) Then
+                    If Not stamp.TryGetValue(path1, stamp1) Then
+                        Using r = System.IO.File.OpenRead(path1)
+                            Dim array As Byte() = New Byte(4) {}
+                            r.Seek(60, IO.SeekOrigin.Begin)
+                            r.Read(array, 0, 4)
+                            Dim dword As Integer = Bytes2Dword(array)
+                            r.Seek(dword + 8, IO.SeekOrigin.Begin)
+                            r.Read(array, 0, 4)
+                            stamp1 = New DateTime(1970, 1, 1, 0, 0, 0)
+                            stamp1 = stamp1.AddSeconds(Bytes2Dword(array)).ToLocalTime()
+                            stamp(path1) = stamp1
+                        End Using
+                    End If
+                    buffer.AppendFormat("{0:D2}-{1:D02}-{2:D2} {3:D2}:{4:D2}:{5:D2}",
+                                        stamp1.Year, stamp1.Month, stamp1.Day,
+                                        stamp1.Hour, stamp1.Minute, stamp1.Second)
                 End If
 
-                buffer.AppendFormat("{1}{0}{2}{0}{3}", vbTab,
-                                    VersionFilter(vi.FileVersion),
-                                    VersionFilter(vi.ProductVersion),
-                                    stamp1)
+                Dim emptyline As Boolean = False
+                Dim fi As New System.IO.FileInfo(path1)
                 If CheckBoxSize.Checked Then
-                    buffer.AppendFormat("{0}{1}{2} bytes", vbCrLf, vbTab, fi.Length)
+                    buffer.AppendFormat("{0}{1}{2} bytes ", vbCrLf, vbTab, fi.Length)
+                    emptyline = True
                 End If
                 If CheckBoxMD5.Checked Then
                     If Not CheckBoxSize.Checked Then
                         buffer.AppendLine()
+                        buffer.Append(vbTab)
                     End If
                     Dim md5sum As String = Nothing
                     If Not md5cache.TryGetValue(path1, md5sum) Then
@@ -71,7 +75,11 @@ Public Class Form1
                         End Using
                         md5cache(path1) = md5sum
                     End If
-                    buffer.AppendFormat("{0}md5sum:{1}", vbTab, md5sum)
+                    buffer.AppendFormat("md5sum:{1}", vbTab, md5sum)
+                    emptyline = True
+                End If
+                If emptyline Then
+                    buffer.AppendLine()
                 End If
             Else
                 buffer.Append("(file not found)")
