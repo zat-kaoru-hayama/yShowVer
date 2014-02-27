@@ -83,6 +83,7 @@ Partial Class Form1
         '
         'CheckBoxSize
         '
+        Me.CheckBoxSize.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxSize.AutoSize = True
         Me.CheckBoxSize.Location = New System.Drawing.Point(139, 235)
         Me.CheckBoxSize.Name = "CheckBoxSize"
@@ -93,6 +94,7 @@ Partial Class Form1
         '
         'CheckBoxMD5
         '
+        Me.CheckBoxMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxMD5.AutoSize = True
         Me.CheckBoxMD5.Location = New System.Drawing.Point(255, 235)
         Me.CheckBoxMD5.Name = "CheckBoxMD5"
