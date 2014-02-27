@@ -108,4 +108,14 @@ Public Class Form1
         Clipboard.SetDataObject(Me.TextBox1.Text, True)
         System.Media.SystemSounds.Asterisk.Play()
     End Sub
+
+    Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
+        Dim args = System.Environment.GetCommandLineArgs()
+        For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
+            Me.PathList.Add(args(i))
+        Next
+        UpdateTextBox()
+        Dim v = System.Environment.Version
+        Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
+    End Sub
 End Class
