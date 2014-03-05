@@ -59,13 +59,12 @@ Public Class Form1
                 Dim emptyline As Boolean = False
                 Dim fi As New System.IO.FileInfo(path1)
                 If CheckBoxSize.Checked Then
-                    buffer.AppendFormat("{0}{1}{2} bytes ", vbCrLf, vbTab, fi.Length)
+                    buffer.AppendFormat("{0}{1}{2} bytes", vbCrLf, vbTab, fi.Length)
                     emptyline = True
                 End If
                 If CheckBoxMD5.Checked Then
                     If Not CheckBoxSize.Checked Then
                         buffer.AppendLine()
-                        buffer.Append(vbTab)
                     End If
                     Dim md5sum As String = Nothing
                     If Not md5cache.TryGetValue(path1, md5sum) Then
@@ -76,7 +75,7 @@ Public Class Form1
                         End Using
                         md5cache(path1) = md5sum
                     End If
-                    buffer.AppendFormat("md5sum:{1}", vbTab, md5sum)
+                    buffer.AppendFormat("{0}md5sum:{1}", vbTab, md5sum)
                     emptyline = True
                 End If
                 If emptyline Then
