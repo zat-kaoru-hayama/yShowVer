@@ -25,14 +25,14 @@ Public Class Form1
             If CheckBoxFullPath.Checked Then
                 buffer.AppendFormat("{0}{1}{2}", System.IO.Path.GetFullPath(path1), vbCrLf, vbTab)
             Else
-                buffer.AppendFormat("{0,-16}", System.IO.Path.GetFileName(path1))
+                buffer.AppendFormat("{0,-16} ", System.IO.Path.GetFileName(path1))
             End If
 
             If System.IO.File.Exists(path1) Then
                 Dim vi As System.Diagnostics.FileVersionInfo =
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
 
-                buffer.AppendFormat("{0,-17}{1,-17}",
+                buffer.AppendFormat("{0,-16} {1,-16} ",
                                     VersionFilter(vi.FileVersion),
                                     VersionFilter(vi.ProductVersion))
 
