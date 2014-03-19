@@ -23,7 +23,7 @@ Public Class Form1
             End If
             '*** パス ***
             If CheckBoxFullPath.Checked Then
-                buffer.AppendFormat("{0}{1}{2}", System.IO.Path.GetFullPath(path1), vbCrLf, vbTab)
+                buffer.Append(System.IO.Path.GetFullPath(path1))
             Else
                 buffer.AppendFormat("{0,-16} ", System.IO.Path.GetFileName(path1))
             End If
@@ -32,12 +32,16 @@ Public Class Form1
                 Dim vi As System.Diagnostics.FileVersionInfo =
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
 
-                buffer.AppendFormat("{0,-16} {1,-16} ",
-                                    VersionFilter(vi.FileVersion),
-                                    VersionFilter(vi.ProductVersion))
+                If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
+                    If CheckBoxFullPath.Checked Then
+                        buffer.Append(vbCrLf)
+                        buffer.Append(vbTab)
+                    End If
+                    buffer.AppendFormat("{0,-16} {1,-16} ",
+                    VersionFilter(vi.FileVersion),
+                    VersionFilter(vi.ProductVersion))
 
-                Dim stamp1 As DateTime
-                If Not String.IsNullOrWhiteSpace(vi.FileVersion) Then
+                    Dim stamp1 As DateTime
                     If Not stamp.TryGetValue(path1, stamp1) Then
                         Using r = System.IO.File.OpenRead(path1)
                             Dim array As Byte() = New Byte(4) {}
