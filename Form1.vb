@@ -123,4 +123,23 @@ Public Class Form1
         Dim v = System.Environment.Version
         Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
     End Sub
+
+    Private Sub Form1_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragDrop, TextBox1.DragDrop
+        Dim filenames As String() = CType(e.Data.GetData(DataFormats.FileDrop, False), String())
+        For Each fname As String In filenames
+            Me.PathList.Add(fname)
+        Next
+        UpdateTextBox()
+    End Sub
+
+    Private Sub Form1_DragEnter(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragEnter, TextBox1.DragEnter
+        'コントロール内にドラッグされたとき実行される
+        If e.Data.GetDataPresent(DataFormats.FileDrop) Then
+            'ドラッグされたデータ形式を調べ、ファイルのときはコピーとする
+            e.Effect = DragDropEffects.Copy
+        Else
+            'ファイル以外は受け付けない
+            e.Effect = DragDropEffects.None
+        End If
+    End Sub
 End Class
