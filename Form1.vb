@@ -121,6 +121,11 @@ Public Class Form1
         Next
         UpdateTextBox()
         Dim v = System.Environment.Version
+        Using reg As New AlfaRegistory()
+            Me.CheckBoxFullPath.Checked = (String.Compare(reg("FullPath"), "1") = 0)
+            Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
+            Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
+        End Using
         Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
     End Sub
 
@@ -141,5 +146,13 @@ Public Class Form1
             'ファイル以外は受け付けない
             e.Effect = DragDropEffects.None
         End If
+    End Sub
+
+    Private Sub Form1_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
+        Using reg As New AlfaRegistory()
+            reg("FullPath") = If(Me.CheckBoxFullPath.Checked, "1", "0")
+            reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
+            reg("Size") = If(Me.CheckBoxSize.Checked, "1", "0")
+        End Using
     End Sub
 End Class
