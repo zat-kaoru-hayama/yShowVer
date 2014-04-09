@@ -25,7 +25,7 @@ Public Class Form1
             If CheckBoxFullPath.Checked Then
                 buffer.Append(System.IO.Path.GetFullPath(path1))
             Else
-                buffer.AppendFormat("{0,-16} ", System.IO.Path.GetFileName(path1))
+                buffer.AppendFormat("{0,-16} ", path1)
             End If
 
             If System.IO.File.Exists(path1) Then
