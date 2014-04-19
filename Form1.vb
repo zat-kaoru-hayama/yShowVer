@@ -22,10 +22,20 @@ Public Class Form1
                 buffer.AppendLine()
             End If
             '*** パス ***
-            If CheckBoxFullPath.Checked Then
-                buffer.Append(System.IO.Path.GetFullPath(path1))
+            Dim path_ As String
+            Select Case Me.ComboBoxPath.SelectedIndex
+                Case 2
+                    path_ = System.IO.Path.GetFileName(path1)
+                Case 1
+                    path_ = System.IO.Path.GetFullPath(path1)
+                Case Else
+                    path_ = path1
+            End Select
+            If CheckBoxCrLf.Checked Then
+                buffer.AppendLine(path_)
+                buffer.Append(vbTab)
             Else
-                buffer.AppendFormat("{0,-16} ", path1)
+                buffer.AppendFormat("{0,-16} ", path_)
             End If
 
             If System.IO.File.Exists(path1) Then
@@ -33,10 +43,6 @@ Public Class Form1
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
 
                 If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
-                    If CheckBoxFullPath.Checked Then
-                        buffer.Append(vbCrLf)
-                        buffer.Append(vbTab)
-                    End If
                     buffer.AppendFormat("{0,-16} {1,-16} ",
                     VersionFilter(vi.FileVersion),
                     VersionFilter(vi.ProductVersion))
@@ -94,7 +100,8 @@ Public Class Form1
     End Sub
 
     Private Sub CheckBoxFullPath_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _
-        CheckBoxFullPath.CheckedChanged, CheckBoxSize.CheckedChanged, CheckBoxMD5.CheckedChanged
+         CheckBoxSize.CheckedChanged, CheckBoxMD5.CheckedChanged, _
+         ComboBoxPath.SelectedIndexChanged, CheckBoxCrLf.CheckedChanged
         UpdateTextBox()
     End Sub
 
@@ -122,7 +129,15 @@ Public Class Form1
         UpdateTextBox()
         Dim v = System.Environment.Version
         Using reg As New AlfaRegistory()
-            Me.CheckBoxFullPath.Checked = (String.Compare(reg("FullPath"), "1") = 0)
+            Dim FullPath = reg("FullPath")
+            If String.Compare(FullPath, "1") = 0 Then
+                Me.ComboBoxPath.SelectedIndex = 1
+            ElseIf String.Compare(FullPath, "2") = 0 Then
+                Me.ComboBoxPath.SelectedIndex = 2
+            Else
+                Me.ComboBoxPath.SelectedIndex = 0
+            End If
+            Me.CheckBoxCrLf.Checked = (String.Compare(reg("CrLf"), "1") = 0)
             Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
             Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
         End Using
@@ -150,7 +165,8 @@ Public Class Form1
 
     Private Sub Form1_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
         Using reg As New AlfaRegistory()
-            reg("FullPath") = If(Me.CheckBoxFullPath.Checked, "1", "0")
+            reg("FullPath") = Me.ComboBoxPath.SelectedIndex.ToString()
+            reg("CrLf") = If(Me.CheckBoxCrLf.Checked, "1", "0")
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
             reg("Size") = If(Me.CheckBoxSize.Checked, "1", "0")
         End Using

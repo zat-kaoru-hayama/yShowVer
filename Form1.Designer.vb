@@ -23,12 +23,13 @@ Partial Class Form1
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.CheckBoxFullPath = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ToolStripMenuItemAppend = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItemCopy = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckBoxSize = New System.Windows.Forms.CheckBox()
         Me.CheckBoxMD5 = New System.Windows.Forms.CheckBox()
+        Me.ComboBoxPath = New System.Windows.Forms.ComboBox()
+        Me.CheckBoxCrLf = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -48,17 +49,6 @@ Partial Class Form1
         Me.TextBox1.Size = New System.Drawing.Size(619, 194)
         Me.TextBox1.TabIndex = 0
         Me.TextBox1.TabStop = False
-        '
-        'CheckBoxFullPath
-        '
-        Me.CheckBoxFullPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.CheckBoxFullPath.AutoSize = True
-        Me.CheckBoxFullPath.Location = New System.Drawing.Point(12, 235)
-        Me.CheckBoxFullPath.Name = "CheckBoxFullPath"
-        Me.CheckBoxFullPath.Size = New System.Drawing.Size(109, 16)
-        Me.CheckBoxFullPath.TabIndex = 2
-        Me.CheckBoxFullPath.Text = "フルパス要る？(&P)"
-        Me.CheckBoxFullPath.UseVisualStyleBackColor = True
         '
         'MenuStrip1
         '
@@ -86,7 +76,7 @@ Partial Class Form1
         '
         Me.CheckBoxSize.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxSize.AutoSize = True
-        Me.CheckBoxSize.Location = New System.Drawing.Point(139, 235)
+        Me.CheckBoxSize.Location = New System.Drawing.Point(242, 233)
         Me.CheckBoxSize.Name = "CheckBoxSize"
         Me.CheckBoxSize.Size = New System.Drawing.Size(101, 16)
         Me.CheckBoxSize.TabIndex = 3
@@ -97,12 +87,33 @@ Partial Class Form1
         '
         Me.CheckBoxMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxMD5.AutoSize = True
-        Me.CheckBoxMD5.Location = New System.Drawing.Point(255, 235)
+        Me.CheckBoxMD5.Location = New System.Drawing.Point(349, 233)
         Me.CheckBoxMD5.Name = "CheckBoxMD5"
         Me.CheckBoxMD5.Size = New System.Drawing.Size(121, 16)
         Me.CheckBoxMD5.TabIndex = 4
         Me.CheckBoxMD5.Text = "MD5SUM要る？(&M)"
         Me.CheckBoxMD5.UseVisualStyleBackColor = True
+        '
+        'ComboBoxPath
+        '
+        Me.ComboBoxPath.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.ComboBoxPath.FormattingEnabled = True
+        Me.ComboBoxPath.Items.AddRange(New Object() {"そのまま", "フルパス化", "ファイル名のみ"})
+        Me.ComboBoxPath.Location = New System.Drawing.Point(12, 229)
+        Me.ComboBoxPath.Name = "ComboBoxPath"
+        Me.ComboBoxPath.Size = New System.Drawing.Size(121, 20)
+        Me.ComboBoxPath.TabIndex = 6
+        '
+        'CheckBoxCrLf
+        '
+        Me.CheckBoxCrLf.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.CheckBoxCrLf.AutoSize = True
+        Me.CheckBoxCrLf.Location = New System.Drawing.Point(155, 232)
+        Me.CheckBoxCrLf.Name = "CheckBoxCrLf"
+        Me.CheckBoxCrLf.Size = New System.Drawing.Size(81, 16)
+        Me.CheckBoxCrLf.TabIndex = 7
+        Me.CheckBoxCrLf.Text = "改行要る？"
+        Me.CheckBoxCrLf.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -110,9 +121,10 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(643, 263)
+        Me.Controls.Add(Me.CheckBoxCrLf)
+        Me.Controls.Add(Me.ComboBoxPath)
         Me.Controls.Add(Me.CheckBoxMD5)
         Me.Controls.Add(Me.CheckBoxSize)
-        Me.Controls.Add(Me.CheckBoxFullPath)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
@@ -128,11 +140,12 @@ Partial Class Form1
 
     End Sub
     Friend WithEvents TextBox1 As System.Windows.Forms.TextBox
-    Friend WithEvents CheckBoxFullPath As System.Windows.Forms.CheckBox
     Friend WithEvents MenuStrip1 As System.Windows.Forms.MenuStrip
     Friend WithEvents ToolStripMenuItemAppend As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents ToolStripMenuItemCopy As System.Windows.Forms.ToolStripMenuItem
     Friend WithEvents CheckBoxSize As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBoxMD5 As System.Windows.Forms.CheckBox
+    Friend WithEvents ComboBoxPath As System.Windows.Forms.ComboBox
+    Friend WithEvents CheckBoxCrLf As System.Windows.Forms.CheckBox
 
 End Class
