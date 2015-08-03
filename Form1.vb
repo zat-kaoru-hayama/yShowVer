@@ -122,11 +122,6 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Dim args = System.Environment.GetCommandLineArgs()
-        For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
-            Me.PathList.Add(args(i))
-        Next
-        UpdateTextBox()
         Dim v = System.Environment.Version
         Using reg As New AlfaRegistory()
             Dim FullPath = reg("FullPath")
@@ -141,6 +136,13 @@ Public Class Form1
             Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
             Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
         End Using
+        Dim args = System.Environment.GetCommandLineArgs()
+        For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
+            Dim arg1 As String = args(i)
+            Select Case arg1                Case "-c"                    Me.CheckBoxCrLf.Checked = False                Case "+c"                    Me.CheckBoxCrLf.Checked = True                Case "-m"                    Me.CheckBoxMD5.Checked = False                Case "+m"                    Me.CheckBoxMD5.Checked = True                Case "-s"                    Me.CheckBoxSize.Checked = False                Case "+s"                    Me.CheckBoxSize.Checked = True                Case Else                    Me.PathList.Add(arg1)
+            End Select
+        Next
+        UpdateTextBox()
         Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
     End Sub
 
