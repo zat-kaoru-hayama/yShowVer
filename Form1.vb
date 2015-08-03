@@ -139,7 +139,27 @@ Public Class Form1
         Dim args = System.Environment.GetCommandLineArgs()
         For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
             Dim arg1 As String = args(i)
-            Select Case arg1                Case "-c"                    Me.CheckBoxCrLf.Checked = False                Case "+c"                    Me.CheckBoxCrLf.Checked = True                Case "-m"                    Me.CheckBoxMD5.Checked = False                Case "+m"                    Me.CheckBoxMD5.Checked = True                Case "-s"                    Me.CheckBoxSize.Checked = False                Case "+s"                    Me.CheckBoxSize.Checked = True                Case Else                    Me.PathList.Add(arg1)
+            Select Case arg1
+                Case "/rawpath"
+                    Me.ComboBoxPath.SelectedIndex = 0
+                Case "/fullpath"
+                    Me.ComboBoxPath.SelectedIndex = 1
+                Case "/nameonly"
+                    Me.ComboBoxPath.SelectedIndex = 2
+                Case "-c"
+                    Me.CheckBoxCrLf.Checked = False
+                Case "+c"
+                    Me.CheckBoxCrLf.Checked = True
+                Case "-m"
+                    Me.CheckBoxMD5.Checked = False
+                Case "+m"
+                    Me.CheckBoxMD5.Checked = True
+                Case "-s"
+                    Me.CheckBoxSize.Checked = False
+                Case "+s"
+                    Me.CheckBoxSize.Checked = True
+                Case Else
+                    Me.PathList.Add(arg1)
             End Select
         Next
         UpdateTextBox()
