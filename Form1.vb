@@ -123,7 +123,7 @@ Public Class Form1
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Dim v = System.Environment.Version
-        Using reg As New AlfaRegistory()
+        Using reg As New AlfaRegistry()
             Dim FullPath = reg("FullPath")
             If String.Compare(FullPath, "1") = 0 Then
                 Me.ComboBoxPath.SelectedIndex = 1
@@ -186,7 +186,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
-        Using reg As New AlfaRegistory()
+        Using reg As New AlfaRegistry()
             reg("FullPath") = Me.ComboBoxPath.SelectedIndex.ToString()
             reg("CrLf") = If(Me.CheckBoxCrLf.Checked, "1", "0")
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
