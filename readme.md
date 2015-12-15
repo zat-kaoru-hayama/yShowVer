@@ -1,3 +1,8 @@
+yShowVer - Yet another Show Windows-executable's Version
+=========================================================
+
+<img src="yShowVer.png" />
+
 ```
 yShowVer {options} FILENAME(s)
 ```
