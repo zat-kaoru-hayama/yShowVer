@@ -11,5 +11,10 @@ if not "%1" == "" goto %1
 :status:
     dir /s /b *.exe | yShowVer.exe -
     goto end
+
+:package:
+    for %%I in (*.sln) do set "TARGET=%%~nI"
+    dir /s /b bin\Release\*.exe | findstr /v vshost | zip -j -@ %TARGET%-%DATE:/=%.zip readme.md
+    goto end
 :end
 endlocal
