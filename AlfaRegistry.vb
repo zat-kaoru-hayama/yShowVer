@@ -1,4 +1,4 @@
-﻿Public Class AlfaRegistory
+﻿Public Class AlfaRegistry
     Implements IDisposable
 
     Const MakerFolder As String = "Software\Alfatech"
@@ -7,9 +7,7 @@
     Private Reg As Microsoft.Win32.RegistryKey
 
     Public Sub New()
-        Me.Folder = System.IO.Path.Combine(MakerFolder,
-                                           System.IO.Path.GetFileNameWithoutExtension(
-                                               System.Environment.GetCommandLineArgs(0)).Replace(".vshost", ""))
+        Me.Folder = System.IO.Path.Combine(MakerFolder, My.Application.Info.AssemblyName)
     End Sub
 
     Default Public Property Item(ByVal key As String) As String

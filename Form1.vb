@@ -1,6 +1,8 @@
 ﻿Imports System.Security.Cryptography
 
 Public Class Form1
+    Const FILE_ADDRESS_OF_NEW_EXE_HEADER As Integer = 60
+
     Public PathList As New List(Of String)
 
     Private stamp As New Dictionary(Of String, DateTime)
@@ -14,10 +16,32 @@ Public Class Form1
         Return CType(Array(0) + Array(1) * 256 + Array(2) * 256 * 256 + Array(3) * 256 * 256 * 256, Int64)
     End Function
 
+    Private Shared Function Bytes2Word(ByVal array As Byte()) As Int32
+        Return CType(array(0) + array(1) * 256, Int32)
+    End Function
+
+    Private Shared Function GetBit(r As System.IO.FileStream) As Integer
+        Dim array = New Byte(6) {}
+        r.Seek(FILE_ADDRESS_OF_NEW_EXE_HEADER, System.IO.SeekOrigin.Begin)
+        r.Read(array, 0, 4)
+        Dim offset = Bytes2Dword(array)
+        r.Seek(offset, IO.SeekOrigin.Begin)
+        r.Read(array, 0, 6)
+        If array(0) = &H50 AndAlso array(1) = &H45 Then
+            If array(4) = &H4C AndAlso array(5) = 1 Then
+                Return 32
+            ElseIf array(4) = &H64 AndAlso array(5) = &H86 Then
+                Return 64
+            End If
+        End If
+        Return 0
+    End Function
+
     Private Sub UpdateTextBox()
         Cursor.Current = Cursors.WaitCursor
         Dim buffer As New System.Text.StringBuilder()
         For Each path1 As String In PathList
+            Dim bit As Integer = -1
             If buffer.Length > 0 Then
                 buffer.AppendLine()
             End If
@@ -50,15 +74,19 @@ Public Class Form1
                     Dim stamp1 As DateTime
                     If Not stamp.TryGetValue(path1, stamp1) Then
                         Using r = System.IO.File.OpenRead(path1)
+                            ' Read MZ Header
                             Dim array As Byte() = New Byte(4) {}
-                            r.Seek(60, IO.SeekOrigin.Begin)
+                            r.Seek(FILE_ADDRESS_OF_NEW_EXE_HEADER, IO.SeekOrigin.Begin)
                             r.Read(array, 0, 4)
                             Dim dword As Integer = Bytes2Dword(array)
+                            ' Move PE Header
                             r.Seek(dword + 8, IO.SeekOrigin.Begin)
                             r.Read(array, 0, 4)
                             stamp1 = New DateTime(1970, 1, 1, 0, 0, 0)
                             stamp1 = stamp1.AddSeconds(Bytes2Dword(array)).ToLocalTime()
                             stamp(path1) = stamp1
+
+                            bit = GetBit(r)
                         End Using
                     End If
                     buffer.AppendFormat("{0:D2}-{1:D02}-{2:D2} {3:D2}:{4:D2}:{5:D2}",
@@ -81,11 +109,22 @@ Public Class Form1
                         Using md5_ = MD5.Create()
                             Using stream_ = System.IO.File.OpenRead(path1)
                                 md5sum = BitConverter.ToString(md5_.ComputeHash(stream_)).Replace("-", "").ToLower()
+                                If bit < 0 Then
+                                    bit = GetBit(stream_)
+                                End If
                             End Using
                         End Using
                         md5cache(path1) = md5sum
                     End If
                     buffer.AppendFormat("{0}md5sum:{1}", vbTab, md5sum)
+                    If bit < 0 Then
+                        Using reader_ = System.IO.File.OpenRead(path1)
+                            bit = GetBit(reader_)
+                        End Using
+                    End If
+                    If bit > 0 Then
+                        buffer.AppendFormat("{0}({1}bit)", vbTab, bit)
+                    End If
                     emptyline = True
                 End If
                 If emptyline Then
@@ -122,22 +161,9 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        Dim args = System.Environment.GetCommandLineArgs()
-        For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
-            If args(i) <> "-" Then
-                Me.PathList.Add(args(i))
-            Else
-                While Console.In.Peek() >= 0
-                    Dim line As String = Console.In.ReadLine()
-                    If Not String.IsNullOrWhiteSpace(line) Then
-                        Me.PathList.Add(line.Trim())
-                    End If
-                End While
-            End If
-        Next
         UpdateTextBox()
         Dim v = System.Environment.Version
-        Using reg As New AlfaRegistory()
+        Using reg As New AlfaRegistry()
             Dim FullPath = reg("FullPath")
             If String.Compare(FullPath, "1") = 0 Then
                 Me.ComboBoxPath.SelectedIndex = 1
@@ -150,6 +176,40 @@ Public Class Form1
             Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
             Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
         End Using
+        Dim args = System.Environment.GetCommandLineArgs()
+        For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
+            Dim arg1 As String = args(i)
+            Select Case arg1
+                Case "/rawpath"
+                    Me.ComboBoxPath.SelectedIndex = 0
+                Case "/fullpath"
+                    Me.ComboBoxPath.SelectedIndex = 1
+                Case "/nameonly"
+                    Me.ComboBoxPath.SelectedIndex = 2
+                Case "-c"
+                    Me.CheckBoxCrLf.Checked = False
+                Case "+c"
+                    Me.CheckBoxCrLf.Checked = True
+                Case "-m"
+                    Me.CheckBoxMD5.Checked = False
+                Case "+m"
+                    Me.CheckBoxMD5.Checked = True
+                Case "-s"
+                    Me.CheckBoxSize.Checked = False
+                Case "+s"
+                    Me.CheckBoxSize.Checked = True
+                Case "-"
+                    While Console.In.Peek() >= 0
+                        Dim line As String = Console.In.ReadLine()
+                        If Not String.IsNullOrWhiteSpace(line) Then
+                            Me.PathList.Add(line.Trim())
+                        End If
+                    End While
+                Case Else
+                    Me.PathList.Add(arg1)
+            End Select
+        Next
+        UpdateTextBox()
         Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
     End Sub
 
@@ -173,7 +233,7 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
-        Using reg As New AlfaRegistory()
+        Using reg As New AlfaRegistry()
             reg("FullPath") = Me.ComboBoxPath.SelectedIndex.ToString()
             reg("CrLf") = If(Me.CheckBoxCrLf.Checked, "1", "0")
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
