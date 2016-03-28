@@ -124,7 +124,16 @@ Public Class Form1
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Dim args = System.Environment.GetCommandLineArgs()
         For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
-            Me.PathList.Add(args(i))
+            If args(i) <> "-" Then
+                Me.PathList.Add(args(i))
+            Else
+                While Console.In.Peek() >= 0
+                    Dim line As String = Console.In.ReadLine()
+                    If Not String.IsNullOrWhiteSpace(line) Then
+                        Me.PathList.Add(line.Trim())
+                    End If
+                End While
+            End If
         Next
         UpdateTextBox()
         Dim v = System.Environment.Version
