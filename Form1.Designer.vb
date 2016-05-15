@@ -30,6 +30,7 @@ Partial Class Form1
         Me.CheckBoxMD5 = New System.Windows.Forms.CheckBox()
         Me.ComboBoxPath = New System.Windows.Forms.ComboBox()
         Me.CheckBoxCrLf = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxBit = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -37,10 +38,10 @@ Partial Class Form1
         '
         Me.TextBox1.AllowDrop = True
         Me.TextBox1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-                    Or System.Windows.Forms.AnchorStyles.Left) _
-                    Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBox1.BackColor = System.Drawing.SystemColors.Window
-        Me.TextBox1.Font = New System.Drawing.Font("ＭＳ ゴシック", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TextBox1.Font = New System.Drawing.Font("MS Gothic", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.TextBox1.Location = New System.Drawing.Point(12, 29)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
@@ -55,7 +56,7 @@ Partial Class Form1
         Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItemAppend, Me.ToolStripMenuItemCopy})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
-        Me.MenuStrip1.Size = New System.Drawing.Size(643, 26)
+        Me.MenuStrip1.Size = New System.Drawing.Size(643, 24)
         Me.MenuStrip1.TabIndex = 0
         Me.MenuStrip1.TabStop = True
         Me.MenuStrip1.Text = "MenuStrip1"
@@ -63,13 +64,13 @@ Partial Class Form1
         'ToolStripMenuItemAppend
         '
         Me.ToolStripMenuItemAppend.Name = "ToolStripMenuItemAppend"
-        Me.ToolStripMenuItemAppend.Size = New System.Drawing.Size(109, 22)
+        Me.ToolStripMenuItemAppend.Size = New System.Drawing.Size(90, 20)
         Me.ToolStripMenuItemAppend.Text = "ファイル追加(&F)"
         '
         'ToolStripMenuItemCopy
         '
         Me.ToolStripMenuItemCopy.Name = "ToolStripMenuItemCopy"
-        Me.ToolStripMenuItemCopy.Size = New System.Drawing.Size(194, 22)
+        Me.ToolStripMenuItemCopy.Size = New System.Drawing.Size(148, 20)
         Me.ToolStripMenuItemCopy.Text = "クリップボードへ全てコピー(&C)"
         '
         'CheckBoxSize
@@ -115,12 +116,23 @@ Partial Class Form1
         Me.CheckBoxCrLf.Text = "改行要る？"
         Me.CheckBoxCrLf.UseVisualStyleBackColor = True
         '
+        'CheckBoxBit
+        '
+        Me.CheckBoxBit.AutoSize = True
+        Me.CheckBoxBit.Location = New System.Drawing.Point(484, 233)
+        Me.CheckBoxBit.Name = "CheckBoxBit"
+        Me.CheckBoxBit.Size = New System.Drawing.Size(72, 16)
+        Me.CheckBoxBit.TabIndex = 8
+        Me.CheckBoxBit.Text = "Bit要る？"
+        Me.CheckBoxBit.UseVisualStyleBackColor = True
+        '
         'Form1
         '
         Me.AllowDrop = True
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(643, 263)
+        Me.Controls.Add(Me.CheckBoxBit)
         Me.Controls.Add(Me.CheckBoxCrLf)
         Me.Controls.Add(Me.ComboBoxPath)
         Me.Controls.Add(Me.CheckBoxMD5)
@@ -147,5 +159,6 @@ Partial Class Form1
     Friend WithEvents CheckBoxMD5 As System.Windows.Forms.CheckBox
     Friend WithEvents ComboBoxPath As System.Windows.Forms.ComboBox
     Friend WithEvents CheckBoxCrLf As System.Windows.Forms.CheckBox
+    Friend WithEvents CheckBoxBit As System.Windows.Forms.CheckBox
 
 End Class

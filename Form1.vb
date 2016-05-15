@@ -122,7 +122,7 @@ Public Class Form1
                             bit = GetBit(reader_)
                         End Using
                     End If
-                    If bit > 0 Then
+                    If bit > 0 AndAlso Me.CheckBoxBit.Checked Then
                         buffer.AppendFormat("{0}({1}bit)", vbTab, bit)
                     End If
                     emptyline = True
@@ -139,8 +139,12 @@ Public Class Form1
     End Sub
 
     Private Sub CheckBoxFullPath_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _
-         CheckBoxSize.CheckedChanged, CheckBoxMD5.CheckedChanged, _
-         ComboBoxPath.SelectedIndexChanged, CheckBoxCrLf.CheckedChanged
+         CheckBoxSize.CheckedChanged,
+         CheckBoxMD5.CheckedChanged, _
+         ComboBoxPath.SelectedIndexChanged,
+         CheckBoxCrLf.CheckedChanged,
+         CheckBoxBit.CheckedChanged
+
         UpdateTextBox()
     End Sub
 
@@ -184,6 +188,7 @@ Public Class Form1
             Me.CheckBoxCrLf.Checked = (String.Compare(reg("CrLf"), "1") = 0)
             Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
             Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
+            Me.CheckBoxBit.Checked = (String.Compare(reg("Bit"), "1") = 0)
         End Using
         Dim args = System.Environment.GetCommandLineArgs()
         For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
@@ -207,6 +212,10 @@ Public Class Form1
                     Me.CheckBoxSize.Checked = False
                 Case "+s"
                     Me.CheckBoxSize.Checked = True
+                Case "-b"
+                    Me.CheckBoxBit.Checked = False
+                Case "+b"
+                    Me.CheckBoxBit.Checked = True
                 Case "-"
                     While Console.In.Peek() >= 0
                         Dim line As String = Console.In.ReadLine()
@@ -251,6 +260,11 @@ Public Class Form1
             reg("CrLf") = If(Me.CheckBoxCrLf.Checked, "1", "0")
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
             reg("Size") = If(Me.CheckBoxSize.Checked, "1", "0")
+            reg("Bit") = If(Me.CheckBoxBit.Checked, "1", "0")
         End Using
+    End Sub
+
+    Private Sub CheckBoxBit_CheckedChanged(sender As Object, e As EventArgs)
+
     End Sub
 End Class
