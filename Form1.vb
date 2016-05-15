@@ -160,6 +160,15 @@ Public Class Form1
         System.Media.SystemSounds.Asterisk.Play()
     End Sub
 
+    Private Shared Sub Help()
+        MsgBox("yShowVer [/rawpath] [/fullpath] [/nameonly] " & vbCr &
+               "[-c] [+c] [-m] [+m] [-s] [+s] {-|FULLPATH}" & vbCr &
+               "  +c/-c : Split line On/Off " & vbCr &
+               "  +m/-m : Print MD5Sum On/Off" & vbCr &
+               "  +s/-s : Print Filesize On/Off" & vbCr &
+               "  - : Read Filenames from STDIN")
+    End Sub
+
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         UpdateTextBox()
         Dim v = System.Environment.Version
@@ -209,6 +218,10 @@ Public Class Form1
                     Me.PathList.Add(arg1)
             End Select
         Next
+        If Me.PathList.Count <= 0 Then
+            Help()
+            Me.Close()
+        End If
         UpdateTextBox()
         Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
     End Sub
