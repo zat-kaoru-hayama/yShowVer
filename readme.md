@@ -19,4 +19,6 @@ options
 - `+m` - Print MD5
 - `-s` - Do not print SIZE
 - `+s` - Print SIZE
+- `-b` - Do not print Bit-Size
+- `+b` - Print Bit-Size
 - `-` - Read path(s) from STDIN
