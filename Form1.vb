@@ -217,12 +217,12 @@ Public Class Form1
                 Case "+b"
                     Me.CheckBoxBit.Checked = True
                 Case "-"
-                    While Console.In.Peek() >= 0
-                        Dim line As String = Console.In.ReadLine()
+                    Dim files As String = Console.In.ReadToEnd
+                    For Each line As String In files.Split(vbLf)
                         If Not String.IsNullOrWhiteSpace(line) Then
                             Me.PathList.Add(line.Trim())
                         End If
-                    End While
+                    Next
                 Case Else
                     Me.PathList.Add(arg1)
             End Select
