@@ -41,7 +41,7 @@ Partial Class Form1
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TextBox1.BackColor = System.Drawing.SystemColors.Window
-        Me.TextBox1.Font = New System.Drawing.Font("MS Gothic", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
+        Me.TextBox1.Font = New System.Drawing.Font("ＭＳ ゴシック", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(128, Byte))
         Me.TextBox1.Location = New System.Drawing.Point(12, 29)
         Me.TextBox1.Multiline = True
         Me.TextBox1.Name = "TextBox1"
@@ -64,13 +64,13 @@ Partial Class Form1
         'ToolStripMenuItemAppend
         '
         Me.ToolStripMenuItemAppend.Name = "ToolStripMenuItemAppend"
-        Me.ToolStripMenuItemAppend.Size = New System.Drawing.Size(90, 20)
+        Me.ToolStripMenuItemAppend.Size = New System.Drawing.Size(94, 20)
         Me.ToolStripMenuItemAppend.Text = "ファイル追加(&F)"
         '
         'ToolStripMenuItemCopy
         '
         Me.ToolStripMenuItemCopy.Name = "ToolStripMenuItemCopy"
-        Me.ToolStripMenuItemCopy.Size = New System.Drawing.Size(148, 20)
+        Me.ToolStripMenuItemCopy.Size = New System.Drawing.Size(154, 20)
         Me.ToolStripMenuItemCopy.Text = "クリップボードへ全てコピー(&C)"
         '
         'CheckBoxSize
@@ -118,6 +118,7 @@ Partial Class Form1
         '
         'CheckBoxBit
         '
+        Me.CheckBoxBit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxBit.AutoSize = True
         Me.CheckBoxBit.Location = New System.Drawing.Point(484, 233)
         Me.CheckBoxBit.Name = "CheckBoxBit"
