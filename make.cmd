@@ -8,13 +8,16 @@ if not "%1" == "" goto %1
     for %%I in (*.sln) do devenv %%I /build Debug
     goto end
 
-:status:
+:status
     dir /s /b *.exe | yShowVer.exe -
     goto end
 
-:package:
+:package
     for %%I in (*.sln) do set "TARGET=%%~nI"
     dir /s /b bin\Release\*.exe | findstr /v vshost | zip -j -@ %TARGET%-%DATE:/=%.zip readme.md
     goto end
+
+:test
+    bin\Release\yShowVer.exe bin\Release\yShowVer.exe
 :end
 endlocal
