@@ -16,12 +16,15 @@ Public Class Form1
         Return If(src IsNot Nothing, src.Replace(",", ".").Replace(" ", ""), "(not executable)")
     End Function
 
-    Private Shared Function Bytes2Dword(ByVal Array As Byte()) As Int64
-        Return CType(Array(0) + Array(1) * 256 + Array(2) * 256 * 256 + Array(3) * 256 * 256 * 256, Int64)
+    Private Shared Function Bytes2Dword(ByVal Array As Byte()) As Long
+        Return Array(0) +
+            CType(Array(1), Long) * 256 +
+            CType(Array(2), Long) * 256 * 256 +
+            CType(Array(3), Long) * 256 * 256 * 256
     End Function
 
-    Private Shared Function Bytes2Word(ByVal array As Byte()) As Int32
-        Return CType(array(0) + array(1) * 256, Int32)
+    Private Shared Function Bytes2Word(ByVal array As Byte()) As UInt32
+        Return CType(array(0), UInt32) + CType(array(1), UInt32) * CType(256, UInt32)
     End Function
 
     Private Shared Function GetBit(r As System.IO.FileStream) As Integer
