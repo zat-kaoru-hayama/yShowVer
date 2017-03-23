@@ -1,4 +1,8 @@
-﻿Imports System.Security.Cryptography
+﻿Option Strict On
+Option Infer On
+Option Explicit On
+
+Imports System.Security.Cryptography
 
 Public Class Form1
     Const FILE_ADDRESS_OF_NEW_EXE_HEADER As Integer = 60
@@ -78,7 +82,7 @@ Public Class Form1
                             Dim array As Byte() = New Byte(4) {}
                             r.Seek(FILE_ADDRESS_OF_NEW_EXE_HEADER, IO.SeekOrigin.Begin)
                             r.Read(array, 0, 4)
-                            Dim dword As Integer = Bytes2Dword(array)
+                            Dim dword = Bytes2Dword(array)
                             ' Move PE Header
                             r.Seek(dword + 8, IO.SeekOrigin.Begin)
                             r.Read(array, 0, 4)
@@ -218,7 +222,7 @@ Public Class Form1
                     Me.CheckBoxBit.Checked = True
                 Case "-"
                     Dim files As String = Console.In.ReadToEnd
-                    For Each line As String In files.Split(vbLf)
+                    For Each line As String In files.Split(CChar(vbLf))
                         If Not String.IsNullOrWhiteSpace(line) Then
                             Me.PathList.Add(line.Trim())
                         End If
