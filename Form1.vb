@@ -54,14 +54,21 @@ Public Class Form1
             End If
             '*** パス ***
             Dim path_ As String
-            Select Case Me.ComboBoxPath.SelectedIndex
-                Case 2
-                    path_ = System.IO.Path.GetFileName(path1)
-                Case 1
-                    path_ = System.IO.Path.GetFullPath(path1)
-                Case Else
-                    path_ = path1
-            End Select
+            Try
+                Select Case Me.ComboBoxPath.SelectedIndex
+                    Case 2
+                        path_ = System.IO.Path.GetFileName(path1)
+                    Case 1
+                        path_ = System.IO.Path.GetFullPath(path1)
+                    Case Else
+                        path_ = path1
+                End Select
+            Catch ex As System.ArgumentException
+                ' パスに無効な文字列が含まれている時
+                buffer.AppendLine(path1)
+                buffer.Append("(invalid filename)")
+                Continue For
+            End Try
             If CheckBoxCrLf.Checked Then
                 buffer.AppendLine(path_)
                 buffer.Append(vbTab)
