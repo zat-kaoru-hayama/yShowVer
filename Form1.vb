@@ -81,7 +81,7 @@ Public Class Form1
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
 
                 If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
-                    If Me.CheckBoxCompat.Checked Then
+                    If Me.ComboBoxCompat.SelectedIndex = 2 Then
                         buffer.AppendFormat("{0,-16} {1,-16} ",
                             VersionFilter(vi.FileVersion),
                             VersionFilter(vi.ProductVersion))
@@ -112,7 +112,7 @@ Public Class Form1
                     buffer.AppendFormat("{0:D2}-{1:D02}-{2:D2} {3:D2}:{4:D2}:{5:D2}",
                                         stamp1.Year, stamp1.Month, stamp1.Day,
                                         stamp1.Hour, stamp1.Minute, stamp1.Second)
-                    If Not Me.CheckBoxCompat.Checked Then
+                    If Me.ComboBoxCompat.SelectedIndex = 0 Then
                         buffer.AppendFormat("{0}{1}{2,-16} {3,-16} ",
                                             vbCrLf,
                                             vbTab,
@@ -171,7 +171,7 @@ Public Class Form1
          ComboBoxPath.SelectedIndexChanged,
          CheckBoxCrLf.CheckedChanged,
          CheckBoxBit.CheckedChanged,
-         CheckBoxCompat.CheckedChanged
+         ComboBoxCompat.SelectedIndexChanged
 
         UpdateTextBox()
     End Sub
@@ -217,7 +217,10 @@ Public Class Form1
             Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
             Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
             Me.CheckBoxBit.Checked = (String.Compare(reg("Bit"), "1") = 0)
-            Me.CheckBoxCompat.Checked = (String.Compare(reg("Compat"), "1") = 0)
+            Dim index1 As Integer
+            If Integer.TryParse(reg("Compat"), index1) AndAlso index1 < 3 AndAlso index1 >= 0 Then
+                Me.ComboBoxCompat.SelectedIndex = index1
+            End If
         End Using
         Dim args = System.Environment.GetCommandLineArgs()
         For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
@@ -290,7 +293,7 @@ Public Class Form1
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
             reg("Size") = If(Me.CheckBoxSize.Checked, "1", "0")
             reg("Bit") = If(Me.CheckBoxBit.Checked, "1", "0")
-            reg("Compat") = If(Me.CheckBoxCompat.Checked, "1", "0")
+            reg("Compat") = Me.ComboBoxCompat.SelectedIndex.ToString()
         End Using
     End Sub
 

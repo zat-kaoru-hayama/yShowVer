@@ -31,7 +31,7 @@ Partial Class Form1
         Me.ComboBoxPath = New System.Windows.Forms.ComboBox()
         Me.CheckBoxCrLf = New System.Windows.Forms.CheckBox()
         Me.CheckBoxBit = New System.Windows.Forms.CheckBox()
-        Me.CheckBoxCompat = New System.Windows.Forms.CheckBox()
+        Me.ComboBoxCompat = New System.Windows.Forms.ComboBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -128,16 +128,14 @@ Partial Class Form1
         Me.CheckBoxBit.Text = "Bit？"
         Me.CheckBoxBit.UseVisualStyleBackColor = True
         '
-        'CheckBoxCompat
+        'ComboBoxCompat
         '
-        Me.CheckBoxCompat.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CheckBoxCompat.AutoSize = True
-        Me.CheckBoxCompat.Location = New System.Drawing.Point(545, 231)
-        Me.CheckBoxCompat.Name = "CheckBoxCompat"
-        Me.CheckBoxCompat.Size = New System.Drawing.Size(86, 16)
-        Me.CheckBoxCompat.TabIndex = 9
-        Me.CheckBoxCompat.Text = "1.0互換表記"
-        Me.CheckBoxCompat.UseVisualStyleBackColor = True
+        Me.ComboBoxCompat.FormattingEnabled = True
+        Me.ComboBoxCompat.Items.AddRange(New Object() {"デフォルト", "gShowVer互換", "旧yShowVer互換"})
+        Me.ComboBoxCompat.Location = New System.Drawing.Point(423, 230)
+        Me.ComboBoxCompat.Name = "ComboBoxCompat"
+        Me.ComboBoxCompat.Size = New System.Drawing.Size(121, 20)
+        Me.ComboBoxCompat.TabIndex = 9
         '
         'Form1
         '
@@ -145,7 +143,7 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(643, 263)
-        Me.Controls.Add(Me.CheckBoxCompat)
+        Me.Controls.Add(Me.ComboBoxCompat)
         Me.Controls.Add(Me.CheckBoxBit)
         Me.Controls.Add(Me.CheckBoxCrLf)
         Me.Controls.Add(Me.ComboBoxPath)
@@ -174,5 +172,5 @@ Partial Class Form1
     Friend WithEvents ComboBoxPath As System.Windows.Forms.ComboBox
     Friend WithEvents CheckBoxCrLf As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBoxBit As System.Windows.Forms.CheckBox
-    Friend WithEvents CheckBoxCompat As CheckBox
+    Friend WithEvents ComboBoxCompat As ComboBox
 End Class
