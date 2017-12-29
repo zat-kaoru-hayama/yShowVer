@@ -81,9 +81,15 @@ Public Class Form1
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
 
                 If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
-                    buffer.AppendFormat("{0,-16} {1,-16} ",
-                    VersionFilter(vi.FileVersion),
-                    VersionFilter(vi.ProductVersion))
+                    If Me.CheckBoxCompat.Checked Then
+                        buffer.AppendFormat("{0,-16} {1,-16} ",
+                            VersionFilter(vi.FileVersion),
+                            VersionFilter(vi.ProductVersion))
+                    Else
+                        Dim fileVer = String.Format("{0}.{1}.{2}.{3}", vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart)
+                        Dim prodVer = String.Format("{0}.{1}.{2}.{3}", vi.ProductMajorPart, vi.ProductMinorPart, vi.ProductBuildPart, vi.FilePrivatePart)
+                        buffer.AppendFormat("{0,-16} {1,-16} ", fileVer, prodVer)
+                    End If
 
                     Dim stamp1 As DateTime
                     If Not stamp.TryGetValue(path1, stamp1) Then
@@ -106,6 +112,13 @@ Public Class Form1
                     buffer.AppendFormat("{0:D2}-{1:D02}-{2:D2} {3:D2}:{4:D2}:{5:D2}",
                                         stamp1.Year, stamp1.Month, stamp1.Day,
                                         stamp1.Hour, stamp1.Minute, stamp1.Second)
+                    If Not Me.CheckBoxCompat.Checked Then
+                        buffer.AppendFormat("{0}{1}{2,-16} {3,-16} ",
+                                            vbCrLf,
+                                            vbTab,
+                                            """" & vi.FileVersion & """",
+                                            """" & vi.ProductVersion & """")
+                    End If
                 End If
 
                 Dim emptyline As Boolean = False
@@ -154,10 +167,11 @@ Public Class Form1
 
     Private Sub CheckBoxFullPath_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _
          CheckBoxSize.CheckedChanged,
-         CheckBoxMD5.CheckedChanged, _
+         CheckBoxMD5.CheckedChanged,
          ComboBoxPath.SelectedIndexChanged,
          CheckBoxCrLf.CheckedChanged,
-         CheckBoxBit.CheckedChanged
+         CheckBoxBit.CheckedChanged,
+         CheckBoxCompat.CheckedChanged
 
         UpdateTextBox()
     End Sub
@@ -203,6 +217,7 @@ Public Class Form1
             Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
             Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
             Me.CheckBoxBit.Checked = (String.Compare(reg("Bit"), "1") = 0)
+            Me.CheckBoxCompat.Checked = (String.Compare(reg("Compat"), "1") = 0)
         End Using
         Dim args = System.Environment.GetCommandLineArgs()
         For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
@@ -275,6 +290,7 @@ Public Class Form1
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
             reg("Size") = If(Me.CheckBoxSize.Checked, "1", "0")
             reg("Bit") = If(Me.CheckBoxBit.Checked, "1", "0")
+            reg("Compat") = If(Me.CheckBoxCompat.Checked, "1", "0")
         End Using
     End Sub
 

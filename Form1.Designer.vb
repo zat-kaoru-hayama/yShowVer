@@ -31,6 +31,7 @@ Partial Class Form1
         Me.ComboBoxPath = New System.Windows.Forms.ComboBox()
         Me.CheckBoxCrLf = New System.Windows.Forms.CheckBox()
         Me.CheckBoxBit = New System.Windows.Forms.CheckBox()
+        Me.CheckBoxCompat = New System.Windows.Forms.CheckBox()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -77,22 +78,22 @@ Partial Class Form1
         '
         Me.CheckBoxSize.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxSize.AutoSize = True
-        Me.CheckBoxSize.Location = New System.Drawing.Point(242, 233)
+        Me.CheckBoxSize.Location = New System.Drawing.Point(207, 232)
         Me.CheckBoxSize.Name = "CheckBoxSize"
-        Me.CheckBoxSize.Size = New System.Drawing.Size(101, 16)
+        Me.CheckBoxSize.Size = New System.Drawing.Size(68, 16)
         Me.CheckBoxSize.TabIndex = 3
-        Me.CheckBoxSize.Text = "サイズ要る？(&S)"
+        Me.CheckBoxSize.Text = "サイズ(&S)"
         Me.CheckBoxSize.UseVisualStyleBackColor = True
         '
         'CheckBoxMD5
         '
         Me.CheckBoxMD5.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxMD5.AutoSize = True
-        Me.CheckBoxMD5.Location = New System.Drawing.Point(349, 233)
+        Me.CheckBoxMD5.Location = New System.Drawing.Point(276, 232)
         Me.CheckBoxMD5.Name = "CheckBoxMD5"
-        Me.CheckBoxMD5.Size = New System.Drawing.Size(121, 16)
+        Me.CheckBoxMD5.Size = New System.Drawing.Size(88, 16)
         Me.CheckBoxMD5.TabIndex = 4
-        Me.CheckBoxMD5.Text = "MD5SUM要る？(&M)"
+        Me.CheckBoxMD5.Text = "MD5SUM(&M)"
         Me.CheckBoxMD5.UseVisualStyleBackColor = True
         '
         'ComboBoxPath
@@ -111,21 +112,32 @@ Partial Class Form1
         Me.CheckBoxCrLf.AutoSize = True
         Me.CheckBoxCrLf.Location = New System.Drawing.Point(155, 232)
         Me.CheckBoxCrLf.Name = "CheckBoxCrLf"
-        Me.CheckBoxCrLf.Size = New System.Drawing.Size(81, 16)
+        Me.CheckBoxCrLf.Size = New System.Drawing.Size(48, 16)
         Me.CheckBoxCrLf.TabIndex = 7
-        Me.CheckBoxCrLf.Text = "改行要る？"
+        Me.CheckBoxCrLf.Text = "改行"
         Me.CheckBoxCrLf.UseVisualStyleBackColor = True
         '
         'CheckBoxBit
         '
         Me.CheckBoxBit.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CheckBoxBit.AutoSize = True
-        Me.CheckBoxBit.Location = New System.Drawing.Point(484, 233)
+        Me.CheckBoxBit.Location = New System.Drawing.Point(366, 232)
         Me.CheckBoxBit.Name = "CheckBoxBit"
-        Me.CheckBoxBit.Size = New System.Drawing.Size(72, 16)
+        Me.CheckBoxBit.Size = New System.Drawing.Size(51, 16)
         Me.CheckBoxBit.TabIndex = 8
-        Me.CheckBoxBit.Text = "Bit要る？"
+        Me.CheckBoxBit.Text = "Bit？"
         Me.CheckBoxBit.UseVisualStyleBackColor = True
+        '
+        'CheckBoxCompat
+        '
+        Me.CheckBoxCompat.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CheckBoxCompat.AutoSize = True
+        Me.CheckBoxCompat.Location = New System.Drawing.Point(545, 231)
+        Me.CheckBoxCompat.Name = "CheckBoxCompat"
+        Me.CheckBoxCompat.Size = New System.Drawing.Size(86, 16)
+        Me.CheckBoxCompat.TabIndex = 9
+        Me.CheckBoxCompat.Text = "1.0互換表記"
+        Me.CheckBoxCompat.UseVisualStyleBackColor = True
         '
         'Form1
         '
@@ -133,6 +145,7 @@ Partial Class Form1
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 12.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(643, 263)
+        Me.Controls.Add(Me.CheckBoxCompat)
         Me.Controls.Add(Me.CheckBoxBit)
         Me.Controls.Add(Me.CheckBoxCrLf)
         Me.Controls.Add(Me.ComboBoxPath)
@@ -161,5 +174,5 @@ Partial Class Form1
     Friend WithEvents ComboBoxPath As System.Windows.Forms.ComboBox
     Friend WithEvents CheckBoxCrLf As System.Windows.Forms.CheckBox
     Friend WithEvents CheckBoxBit As System.Windows.Forms.CheckBox
-
+    Friend WithEvents CheckBoxCompat As CheckBox
 End Class
