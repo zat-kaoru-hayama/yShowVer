@@ -87,7 +87,7 @@ Public Class Form1
                             VersionFilter(vi.ProductVersion))
                     Else
                         Dim fileVer = String.Format("{0}.{1}.{2}.{3}", vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart)
-                        Dim prodVer = String.Format("{0}.{1}.{2}.{3}", vi.ProductMajorPart, vi.ProductMinorPart, vi.ProductBuildPart, vi.FilePrivatePart)
+                        Dim prodVer = String.Format("{0}.{1}.{2}.{3}", vi.ProductMajorPart, vi.ProductMinorPart, vi.ProductBuildPart, vi.ProductPrivatePart)
                         buffer.AppendFormat("{0,-16} {1,-16} ", fileVer, prodVer)
                     End If
 
