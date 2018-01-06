@@ -193,7 +193,7 @@ Public Class Form1
     End Sub
 
     Private Shared Sub Help()
-        MsgBox("yShowVer [/rawpath] [/fullpath] [/nameonly] " & vbCr &
+        MsgBox("yShowVer [/rawpath] [/fullpath] [/nameonly] [/help]" & vbCr &
                "[-c] [+c] [-m] [+m] [-s] [+s] {-|FULLPATH}" & vbCr &
                "  +c/-c : Split line On/Off " & vbCr &
                "  +m/-m : Print MD5Sum On/Off" & vbCr &
@@ -248,6 +248,10 @@ Public Class Form1
                     Me.CheckBoxBit.Checked = False
                 Case "+b"
                     Me.CheckBoxBit.Checked = True
+                Case "/help", "/h"
+                    Help()
+                    Me.Close()
+                    Return
                 Case "-"
                     Dim files As String = Console.In.ReadToEnd
                     For Each line As String In files.Split(CChar(vbLf))
@@ -259,10 +263,6 @@ Public Class Form1
                     Me.PathList.Add(arg1)
             End Select
         Next
-        If Me.PathList.Count <= 0 Then
-            Help()
-            Me.Close()
-        End If
         UpdateTextBox()
         Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
     End Sub
