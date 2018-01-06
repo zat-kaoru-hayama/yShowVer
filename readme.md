@@ -1,6 +1,8 @@
 yShowVer - Yet another Show Windows-executable's Version
 =========================================================
 
+[ReleaseNote](./release_note.md)
+
 <img src="yShowVer.png" />
 
 ```
