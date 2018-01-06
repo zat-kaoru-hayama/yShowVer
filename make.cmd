@@ -1,35 +1,32 @@
 setlocal
-set "SETTING=%~dp0setting.cmd"
-if exist "%SETTING%" call "%SETTING%"
+set "PROMPT=$G "
+call :"%1" %2
+endlocal
+exit /b
 
-if not "%1" == "" goto %1
-:release
-    for %%I in (*.sln) do devenv %%I /build Release
-    goto end
+:"release"
+:""
+    for %%I in (*.sln) do devenv.com "%%I" /build Release
+    exit /b
 
-:debug
-    for %%I in (*.sln) do devenv %%I /build Debug
-    goto end
+:"debug"
+    for %%I in (*.sln) do devenv.com "%%I" /build Debug
+    exit /b
 
-:status
+:"status"
     dir /s /b *.exe | yShowVer.exe -
-    goto end
+    exit /b
 
-:install
-    if not "%2" == "" set "INSTALL=%~2"
-    copy bin\Release\yShowVer.exe "%INSTALL%\."
-    goto end
+:"install"
+    if not "%1" == "" set "INSTALL=%~2"
+    if not "%INSTALL%" == "" copy bin\Release\yShowVer.exe "%INSTALL%\."
+    exit /b
 
-:package
+:"package"
     for %%I in (*.sln) do set "TARGET=%%~nI"
     dir /s /b bin\Release\*.exe | findstr /v vshost | zip -j -@ %TARGET%-%DATE:/=%.zip readme.md
-    goto end
-:install
+    exit /b
 
-
-:test
+:"test"
     bin\Release\yShowVer.exe bin\Release\yShowVer.exe
-:end
-
-echo set "INSTALL=%2" > "%SETTING%"
-endlocal
+    exit /b
