@@ -82,7 +82,7 @@ Public Class Form1
             End If
 
             Dim vi As System.Diagnostics.FileVersionInfo =
-                    System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
+                    System.Diagnostics.FileVersionInfo.GetVersionInfo(System.IO.Path.GetFullPath(path1))
 
             If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
                 If Me.ComboBoxCompat.SelectedIndex = 2 Then
