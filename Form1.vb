@@ -203,69 +203,86 @@ Public Class Form1
     End Sub
 
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
-        UpdateTextBox()
-        Dim v = System.Environment.Version
-        Using reg As New AlfaRegistry()
-            Dim FullPath = reg("FullPath")
-            If String.Compare(FullPath, "1") = 0 Then
-                Me.ComboBoxPath.SelectedIndex = 1
-            ElseIf String.Compare(FullPath, "2") = 0 Then
-                Me.ComboBoxPath.SelectedIndex = 2
-            Else
-                Me.ComboBoxPath.SelectedIndex = 0
-            End If
-            Me.CheckBoxCrLf.Checked = (String.Compare(reg("CrLf"), "1") = 0)
-            Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
-            Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
-            Me.CheckBoxBit.Checked = (String.Compare(reg("Bit"), "1") = 0)
-            Dim index1 As Integer
-            If Integer.TryParse(reg("Compat"), index1) AndAlso index1 < 3 AndAlso index1 >= 0 Then
-                Me.ComboBoxCompat.SelectedIndex = index1
-            End If
-        End Using
-        Dim args = System.Environment.GetCommandLineArgs()
-        For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
-            Dim arg1 As String = args(i)
-            Select Case arg1
-                Case "/rawpath"
-                    Me.ComboBoxPath.SelectedIndex = 0
-                Case "/fullpath"
+        Try
+            UpdateTextBox()
+            Dim v = System.Environment.Version
+            Using reg As New AlfaRegistry()
+                Dim FullPath = reg("FullPath")
+                If String.Compare(FullPath, "1") = 0 Then
                     Me.ComboBoxPath.SelectedIndex = 1
-                Case "/nameonly"
+                ElseIf String.Compare(FullPath, "2") = 0 Then
                     Me.ComboBoxPath.SelectedIndex = 2
-                Case "-c"
-                    Me.CheckBoxCrLf.Checked = False
-                Case "+c"
-                    Me.CheckBoxCrLf.Checked = True
-                Case "-m"
-                    Me.CheckBoxMD5.Checked = False
-                Case "+m"
-                    Me.CheckBoxMD5.Checked = True
-                Case "-s"
-                    Me.CheckBoxSize.Checked = False
-                Case "+s"
-                    Me.CheckBoxSize.Checked = True
-                Case "-b"
-                    Me.CheckBoxBit.Checked = False
-                Case "+b"
-                    Me.CheckBoxBit.Checked = True
-                Case "/help", "/h"
-                    Help()
-                    Me.Close()
-                    Return
-                Case "-"
-                    Dim files As String = Console.In.ReadToEnd
-                    For Each line As String In files.Split(CChar(vbLf))
-                        If Not String.IsNullOrWhiteSpace(line) Then
-                            Me.PathList.Add(line.Trim())
+                Else
+                    Me.ComboBoxPath.SelectedIndex = 0
+                End If
+                Me.CheckBoxCrLf.Checked = (String.Compare(reg("CrLf"), "1") = 0)
+                Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
+                Me.CheckBoxSize.Checked = (String.Compare(reg("Size"), "1") = 0)
+                Me.CheckBoxBit.Checked = (String.Compare(reg("Bit"), "1") = 0)
+                Dim index1 As Integer
+                If Integer.TryParse(reg("Compat"), index1) AndAlso index1 < 3 AndAlso index1 >= 0 Then
+                    Me.ComboBoxCompat.SelectedIndex = index1
+                End If
+            End Using
+            Dim args = System.Environment.GetCommandLineArgs()
+            For i As Integer = args.GetLowerBound(0) + 1 To args.GetUpperBound(0)
+                Dim arg1 As String = args(i)
+                Select Case arg1
+                    Case "/rawpath"
+                        Me.ComboBoxPath.SelectedIndex = 0
+                    Case "/fullpath"
+                        Me.ComboBoxPath.SelectedIndex = 1
+                    Case "/nameonly"
+                        Me.ComboBoxPath.SelectedIndex = 2
+                    Case "-c"
+                        Me.CheckBoxCrLf.Checked = False
+                    Case "+c"
+                        Me.CheckBoxCrLf.Checked = True
+                    Case "-m"
+                        Me.CheckBoxMD5.Checked = False
+                    Case "+m"
+                        Me.CheckBoxMD5.Checked = True
+                    Case "-s"
+                        Me.CheckBoxSize.Checked = False
+                    Case "+s"
+                        Me.CheckBoxSize.Checked = True
+                    Case "-b"
+                        Me.CheckBoxBit.Checked = False
+                    Case "+b"
+                        Me.CheckBoxBit.Checked = True
+                    Case "/help", "/h"
+                        Help()
+                        Me.Close()
+                        Return
+                    Case "-"
+                        Dim files As String = Console.In.ReadToEnd
+                        For Each line As String In files.Split(CChar(vbLf))
+                            If Not String.IsNullOrWhiteSpace(line) Then
+                                Me.PathList.Add(line.Trim())
+                            End If
+                        Next
+                    Case Else
+                        If arg1.Contains("*") OrElse arg1.Contains("?") Then
+                            Try
+                                Dim folder As String = System.IO.Path.GetDirectoryName(arg1)
+                                Dim name As String = System.IO.Path.GetFileName(arg1)
+                                For Each filename1 As String In System.IO.Directory.GetFiles(folder, name)
+                                    Me.PathList.Add(filename1)
+                                Next
+                            Catch ex As System.ArgumentException
+                                MsgBox(ex.ToString())
+                                Me.PathList.Add(arg1)
+                            End Try
+                        Else
+                            Me.PathList.Add(arg1)
                         End If
-                    Next
-                Case Else
-                    Me.PathList.Add(arg1)
-            End Select
-        Next
-        UpdateTextBox()
-        Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
+                End Select
+            Next
+            UpdateTextBox()
+            Me.Text = String.Format("{0} - {1}", Me.Text, Application.ProductVersion)
+        Catch ex As system.Exception
+            MsgBox(ex.ToString(), MsgBoxStyle.Critical)
+        End Try
     End Sub
 
     Private Sub Form1_DragDrop(ByVal sender As System.Object, ByVal e As System.Windows.Forms.DragEventArgs) Handles MyBase.DragDrop, TextBox1.DragDrop
