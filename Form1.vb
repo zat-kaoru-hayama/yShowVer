@@ -76,92 +76,93 @@ Public Class Form1
                 buffer.AppendFormat("{0,-16} ", path_)
             End If
 
-            If System.IO.File.Exists(path1) Then
-                Dim vi As System.Diagnostics.FileVersionInfo =
+            If Not System.IO.File.Exists(path1) Then
+                buffer.Append("(file not found)")
+                Continue For
+            End If
+
+            Dim vi As System.Diagnostics.FileVersionInfo =
                     System.Diagnostics.FileVersionInfo.GetVersionInfo(path1)
 
-                If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
-                    If Me.ComboBoxCompat.SelectedIndex = 2 Then
-                        buffer.AppendFormat("{0,-16} {1,-16} ",
+            If vi.FileVersion IsNot Nothing OrElse vi.ProductVersion IsNot Nothing Then
+                If Me.ComboBoxCompat.SelectedIndex = 2 Then
+                    buffer.AppendFormat("{0,-16} {1,-16} ",
                             VersionFilter(vi.FileVersion),
                             VersionFilter(vi.ProductVersion))
-                    Else
-                        Dim fileVer = String.Format("{0}.{1}.{2}.{3}", vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart)
-                        Dim prodVer = String.Format("{0}.{1}.{2}.{3}", vi.ProductMajorPart, vi.ProductMinorPart, vi.ProductBuildPart, vi.ProductPrivatePart)
-                        buffer.AppendFormat("{0,-16} {1,-16} ", fileVer, prodVer)
-                    End If
+                Else
+                    Dim fileVer = String.Format("{0}.{1}.{2}.{3}", vi.FileMajorPart, vi.FileMinorPart, vi.FileBuildPart, vi.FilePrivatePart)
+                    Dim prodVer = String.Format("{0}.{1}.{2}.{3}", vi.ProductMajorPart, vi.ProductMinorPart, vi.ProductBuildPart, vi.ProductPrivatePart)
+                    buffer.AppendFormat("{0,-16} {1,-16} ", fileVer, prodVer)
+                End If
 
-                    Dim stamp1 As DateTime
-                    If Not stamp.TryGetValue(path1, stamp1) Then
-                        Using r = System.IO.File.OpenRead(path1)
-                            ' Read MZ Header
-                            Dim array As Byte() = New Byte(4) {}
-                            r.Seek(FILE_ADDRESS_OF_NEW_EXE_HEADER, IO.SeekOrigin.Begin)
-                            r.Read(array, 0, 4)
-                            Dim dword = Bytes2Dword(array)
-                            ' Move PE Header
-                            r.Seek(dword + 8, IO.SeekOrigin.Begin)
-                            r.Read(array, 0, 4)
-                            stamp1 = New DateTime(1970, 1, 1, 0, 0, 0)
-                            stamp1 = stamp1.AddSeconds(Bytes2Dword(array)).ToLocalTime()
-                            stamp(path1) = stamp1
+                Dim stamp1 As DateTime
+                If Not stamp.TryGetValue(path1, stamp1) Then
+                    Using r = System.IO.File.OpenRead(path1)
+                        ' Read MZ Header
+                        Dim array As Byte() = New Byte(4) {}
+                        r.Seek(FILE_ADDRESS_OF_NEW_EXE_HEADER, IO.SeekOrigin.Begin)
+                        r.Read(array, 0, 4)
+                        Dim dword = Bytes2Dword(array)
+                        ' Move PE Header
+                        r.Seek(dword + 8, IO.SeekOrigin.Begin)
+                        r.Read(array, 0, 4)
+                        stamp1 = New DateTime(1970, 1, 1, 0, 0, 0)
+                        stamp1 = stamp1.AddSeconds(Bytes2Dword(array)).ToLocalTime()
+                        stamp(path1) = stamp1
 
-                            bit = GetBit(r)
-                        End Using
-                    End If
-                    buffer.AppendFormat("{0:D2}-{1:D02}-{2:D2} {3:D2}:{4:D2}:{5:D2}",
+                        bit = GetBit(r)
+                    End Using
+                End If
+                buffer.AppendFormat("{0:D2}-{1:D02}-{2:D2} {3:D2}:{4:D2}:{5:D2}",
                                         stamp1.Year, stamp1.Month, stamp1.Day,
                                         stamp1.Hour, stamp1.Minute, stamp1.Second)
-                    If Me.ComboBoxCompat.SelectedIndex = 0 Then
-                        buffer.AppendFormat("{0}{1}{2,-16} {3,-16} ",
+                If Me.ComboBoxCompat.SelectedIndex = 0 Then
+                    buffer.AppendFormat("{0}{1}{2,-16} {3,-16} ",
                                             vbCrLf,
                                             vbTab,
                                             """" & vi.FileVersion & """",
                                             """" & vi.ProductVersion & """")
-                    End If
                 End If
+            End If
 
-                Dim emptyline As Boolean = False
-                Dim fi As New System.IO.FileInfo(path1)
-                If CheckBoxSize.Checked Then
-                    buffer.AppendFormat("{0}{1}{2} bytes", vbCrLf, vbTab, fi.Length)
-                    emptyline = True
-                End If
-                If CheckBoxMD5.Checked Then
-                    If Not CheckBoxSize.Checked Then
-                        buffer.AppendLine()
-                    End If
-                    Dim md5sum As String = Nothing
-                    If Not md5cache.TryGetValue(path1, md5sum) Then
-                        Using md5_ = MD5.Create()
-                            Using stream_ = System.IO.File.OpenRead(path1)
-                                md5sum = BitConverter.ToString(md5_.ComputeHash(stream_)).Replace("-", "").ToLower()
-                                If bit < 0 Then
-                                    bit = GetBit(stream_)
-                                End If
-                            End Using
-                        End Using
-                        md5cache(path1) = md5sum
-                    End If
-                    buffer.AppendFormat("{0}md5sum:{1}", vbTab, md5sum)
-                    If bit < 0 Then
-                        Using reader_ = System.IO.File.OpenRead(path1)
-                            bit = GetBit(reader_)
-                        End Using
-                    End If
-                    If bit > 0 AndAlso Me.CheckBoxBit.Checked Then
-                        buffer.AppendFormat("{0}({1}bit)", vbTab, bit)
-                    End If
-                    emptyline = True
-                End If
-                If emptyline Then
+            Dim emptyline As Boolean = False
+            Dim fi As New System.IO.FileInfo(path1)
+            If CheckBoxSize.Checked Then
+                buffer.AppendFormat("{0}{1}{2} bytes", vbCrLf, vbTab, fi.Length)
+                emptyline = True
+            End If
+            If CheckBoxMD5.Checked Then
+                If Not CheckBoxSize.Checked Then
                     buffer.AppendLine()
                 End If
-            Else
-                buffer.Append("(file not found)")
+                Dim md5sum As String = Nothing
+                If Not md5cache.TryGetValue(path1, md5sum) Then
+                    Using md5_ = MD5.Create()
+                        Using stream_ = System.IO.File.OpenRead(path1)
+                            md5sum = BitConverter.ToString(md5_.ComputeHash(stream_)).Replace("-", "").ToLower()
+                            If bit < 0 Then
+                                bit = GetBit(stream_)
+                            End If
+                        End Using
+                    End Using
+                    md5cache(path1) = md5sum
+                End If
+                buffer.AppendFormat("{0}md5sum:{1}", vbTab, md5sum)
+                If bit < 0 Then
+                    Using reader_ = System.IO.File.OpenRead(path1)
+                        bit = GetBit(reader_)
+                    End Using
+                End If
+                If bit > 0 AndAlso Me.CheckBoxBit.Checked Then
+                    buffer.AppendFormat("{0}({1}bit)", vbTab, bit)
+                End If
+                emptyline = True
             End If
-            Me.Update()
+            If emptyline Then
+                buffer.AppendLine()
+            End If
         Next
+        Me.Update()
         TextBox1.Text = buffer.ToString()
     End Sub
 
@@ -295,9 +296,5 @@ Public Class Form1
             reg("Bit") = If(Me.CheckBoxBit.Checked, "1", "0")
             reg("Compat") = Me.ComboBoxCompat.SelectedIndex.ToString()
         End Using
-    End Sub
-
-    Private Sub CheckBoxBit_CheckedChanged(sender As Object, e As EventArgs)
-
     End Sub
 End Class
