@@ -1,6 +1,6 @@
 setlocal
 set "PROMPT=$G "
-call :"%1" %2
+call :"%1" %2 %3 %4 %5
 endlocal
 exit /b
 
@@ -28,5 +28,5 @@ exit /b
     exit /b
 
 :"test"
-    bin\Release\yShowVer.exe bin\Release\yShowVer.exe
+    bin\Release\yShowVer.exe bin\Release\yShowVer.exe %*
     exit /b

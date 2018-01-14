@@ -55,14 +55,13 @@ Public Class Form1
             '*** パス ***
             Dim path_ As String
             Try
-                Select Case Me.ComboBoxPath.SelectedIndex
-                    Case 2
-                        path_ = System.IO.Path.GetFileName(path1)
-                    Case 1
-                        path_ = System.IO.Path.GetFullPath(path1)
-                    Case Else
-                        path_ = path1
-                End Select
+                If Me.RadioButtonFileNameOnly.Checked Then
+                    path_ = System.IO.Path.GetFileName(path1)
+                ElseIf Me.RadioButtonAbs.Checked Then
+                    path_ = System.IO.Path.GetFullPath(path1)
+                Else
+                    path_ = path1
+                End If
             Catch ex As System.ArgumentException
                 ' パスに無効な文字列が含まれている時
                 buffer.AppendLine(path1)
@@ -169,10 +168,12 @@ Public Class Form1
     Private Sub CheckBoxFullPath_CheckedChanged(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles _
          CheckBoxSize.CheckedChanged,
          CheckBoxMD5.CheckedChanged,
-         ComboBoxPath.SelectedIndexChanged,
          CheckBoxCrLf.CheckedChanged,
          CheckBoxBit.CheckedChanged,
-         ComboBoxCompat.SelectedIndexChanged
+         ComboBoxCompat.SelectedIndexChanged,
+         RadioButtonPathAsIs.CheckedChanged,
+         RadioButtonAbs.CheckedChanged,
+         RadioButtonFileNameOnly.CheckedChanged
 
         UpdateTextBox()
     End Sub
@@ -202,18 +203,22 @@ Public Class Form1
                "  - : Read Filenames from STDIN")
     End Sub
 
+    Const PATH_IS_ASIS As String = "0"
+    Const PATH_IS_ABS As String = "1"
+    Const PATH_IS_NAMEONLY As String = "2"
+
     Private Sub Form1_Load(ByVal sender As System.Object, ByVal e As System.EventArgs) Handles MyBase.Load
         Try
             UpdateTextBox()
             Dim v = System.Environment.Version
             Using reg As New AlfaRegistry()
                 Dim FullPath = reg("FullPath")
-                If String.Compare(FullPath, "1") = 0 Then
-                    Me.ComboBoxPath.SelectedIndex = 1
-                ElseIf String.Compare(FullPath, "2") = 0 Then
-                    Me.ComboBoxPath.SelectedIndex = 2
+                If String.Compare(FullPath, PATH_IS_ABS) = 0 Then
+                    Me.RadioButtonAbs.Checked = True
+                ElseIf String.Compare(FullPath, PATH_IS_NAMEONLY) = 0 Then
+                    Me.RadioButtonFileNameOnly.Checked = True
                 Else
-                    Me.ComboBoxPath.SelectedIndex = 0
+                    Me.RadioButtonPathAsIs.Checked = True
                 End If
                 Me.CheckBoxCrLf.Checked = (String.Compare(reg("CrLf"), "1") = 0)
                 Me.CheckBoxMD5.Checked = (String.Compare(reg("MD5"), "1") = 0)
@@ -229,11 +234,11 @@ Public Class Form1
                 Dim arg1 As String = args(i)
                 Select Case arg1
                     Case "/rawpath"
-                        Me.ComboBoxPath.SelectedIndex = 0
+                        Me.RadioButtonPathAsIs.Checked = True
                     Case "/fullpath"
-                        Me.ComboBoxPath.SelectedIndex = 1
+                        Me.RadioButtonAbs.Checked = True
                     Case "/nameonly"
-                        Me.ComboBoxPath.SelectedIndex = 2
+                        Me.RadioButtonFileNameOnly.Checked = True
                     Case "-c"
                         Me.CheckBoxCrLf.Checked = False
                     Case "+c"
@@ -306,7 +311,13 @@ Public Class Form1
 
     Private Sub Form1_FormClosing(ByVal sender As System.Object, ByVal e As System.Windows.Forms.FormClosingEventArgs) Handles MyBase.FormClosing
         Using reg As New AlfaRegistry()
-            reg("FullPath") = Me.ComboBoxPath.SelectedIndex.ToString()
+            If Me.RadioButtonPathAsIs.Checked Then
+                reg("FullPath") = PATH_IS_ASIS
+            ElseIf Me.RadioButtonAbs.Checked Then
+                reg("FullPath") = PATH_IS_ABS
+            Else
+                reg("FullPath") = PATH_IS_NAMEONLY
+            End If
             reg("CrLf") = If(Me.CheckBoxCrLf.Checked, "1", "0")
             reg("MD5") = If(Me.CheckBoxMD5.Checked, "1", "0")
             reg("Size") = If(Me.CheckBoxSize.Checked, "1", "0")
