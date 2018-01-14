@@ -25,8 +25,7 @@
     @exit /b
 
 :"install"
-    @if not "%1" == "" set "INSTALL=%~2"
-    if not "%INSTALL%" == "" copy bin\Release\yShowVer.exe "%INSTALL%\."
+    for /F %%I in ('where yShowVer') do copy /-Y bin\Release\yShowVer.exe %%I
     @exit /b
 
 :"package"
