@@ -1,26 +1,33 @@
-setlocal
-set "PROMPT=$G "
-call :"%1" %2 %3 %4 %5
-endlocal
-exit /b
+@setlocal
+@set "PROMPT=$G "
+@call :"%1" %2 %3 %4 %5
+@endlocal
+@exit /b
+
+:devenv
+    for %%J in (%*) do for %%I in (*.sln) do devenv.com "%%I" /build %%J
+    @exit /b
 
 :"release"
 :""
-    for %%I in (*.sln) do devenv.com "%%I" /build Release
-    exit /b
+    @call :devenv Release
+    @exit /b
+
+:"all"
+    @call :devenv Debug Release
 
 :"debug"
-    for %%I in (*.sln) do devenv.com "%%I" /build Debug
-    exit /b
+    @call :devenv Debug
+    @exit /b
 
 :"status"
-    dir /s /b *.exe | yShowVer.exe -
-    exit /b
+    @dir /s /b *.exe | findstr /v obj | yShowVer.exe -
+    @exit /b
 
 :"install"
-    if not "%1" == "" set "INSTALL=%~2"
+    @if not "%1" == "" set "INSTALL=%~2"
     if not "%INSTALL%" == "" copy bin\Release\yShowVer.exe "%INSTALL%\."
-    exit /b
+    @exit /b
 
 :"package"
     for %%I in (*.sln) do set "TARGET=%%~nI"
