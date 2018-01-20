@@ -122,6 +122,7 @@ Partial Class Form1
         '
         'ComboBoxCompat
         '
+        Me.ComboBoxCompat.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.ComboBoxCompat.FormattingEnabled = True
         Me.ComboBoxCompat.Items.AddRange(New Object() {"デフォルト", "gShowVer互換", "旧yShowVer互換"})
         Me.ComboBoxCompat.Location = New System.Drawing.Point(395, 257)
@@ -131,6 +132,7 @@ Partial Class Form1
         '
         'RadioButtonPathAsIs
         '
+        Me.RadioButtonPathAsIs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.RadioButtonPathAsIs.AutoSize = True
         Me.RadioButtonPathAsIs.Location = New System.Drawing.Point(12, 243)
         Me.RadioButtonPathAsIs.Name = "RadioButtonPathAsIs"
@@ -142,6 +144,7 @@ Partial Class Form1
         '
         'RadioButtonAbs
         '
+        Me.RadioButtonAbs.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.RadioButtonAbs.AutoSize = True
         Me.RadioButtonAbs.Location = New System.Drawing.Point(12, 260)
         Me.RadioButtonAbs.Name = "RadioButtonAbs"
@@ -153,6 +156,7 @@ Partial Class Form1
         '
         'RadioButtonFileNameOnly
         '
+        Me.RadioButtonFileNameOnly.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.RadioButtonFileNameOnly.AutoSize = True
         Me.RadioButtonFileNameOnly.Location = New System.Drawing.Point(12, 276)
         Me.RadioButtonFileNameOnly.Name = "RadioButtonFileNameOnly"
