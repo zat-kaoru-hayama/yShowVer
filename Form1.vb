@@ -147,6 +147,9 @@ Public Class Form1
                     md5cache(path1) = md5sum
                 End If
                 buffer.AppendFormat("{0}md5sum:{1}", vbTab, md5sum)
+                emptyline = True
+            End If
+            If Me.CheckBoxBit.Checked Then
                 If bit < 0 Then
                     Using reader_ = System.IO.File.OpenRead(path1)
                         bit = GetBit(reader_)
